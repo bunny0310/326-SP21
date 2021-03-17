@@ -2,13 +2,60 @@
 <html>
 <head>
 	<link rel='stylesheet' href='pmstyling.css'>
-	<title>Portfolio Manager</title>
+  <title>Portfolio Manager</title>
+  <!-- bootstrap library -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- Popper JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
+
 <body>
 	<div class="topnav">
-        <a href="#Login">login</a>
-        <a href="#Register">register</a>
-        <b href="#home">portfolio manager</b>
-      </div>
+    <img src="cs326icon.svg" class="nav-logo">
+    <a href="#Login">login</a>
+    <a href="#Register">register</a>
+    <b href="#home">portfolio manager</b>
+  </div>
+
+  <div class="header">
+      <button class="fab">add new project</button>
+      <h2>project dashboard</h2>
+  </div>
+  <div class="container">
+    <div class="dashboard">
+        <div class="card bg-primary text-black">
+          <div class="card-body">
+            Stock Trend Analyzer
+            <span class="buttons">
+                <button class="delete"><img src="./trash.svg"></button>
+                <button class="edit"><img src="./edit.svg"></button>
+            </span>
+          </div>
+        </div>
+        <div class="card bg-primary text-black">
+            <div class="card-body">
+              To Do List App
+              <span class="buttons">
+                  <button class="delete"><img src="./trash.svg"></button>
+                  <button class="edit"><img src="./edit.svg"></button>
+              </span>
+            </div>
+          </div>
+          <div class="card bg-primary text-black">
+              <div class="card-body">
+                Restaurant Menu App
+                <span class="buttons">
+                    <button class="delete"><img src="./trash.svg"></button>
+                    <button class="edit"><img src="./edit.svg"></button>
+                </span>
+              </div>
+            </div>
+    </div>
+  </div>
+
 </body>
 </html>

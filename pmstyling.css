@@ -1,7 +1,7 @@
 body {
     margin: 0;
     font-family: 'Avenir Next';
-    background-color: #333333;
+    background-color: #333333 !important;
   }
   
   .topnav {
@@ -37,6 +37,58 @@ body {
     color: white;
   }
 @font-face {
-  font-family: 'Avenir Next';
-  src: url("http://www.yoursite.com/fonts/Avenir_Next.otf"); /* File to be stored at your site */
+  font-family: 'Avenir Next' !important;
+  src: url("./fonts/AvenirNextLTPro-It.otf") !important;
+  }
+
+  .nav-logo {
+    margin-left: 10px;
+    margin-top: 10px;
+    float: left;
+  }
+
+  .header h2{
+    margin-top: 50px;
+    text-align: center;
+    font-family: 'Avenir Next' !important;
+    color: #4C98E3; 
+  }
+  .header button.fab {
+    float: right;
+    height: 40px;
+    width: 180px;
+    margin-right: 100px;
+    background-color: #4C98E3; 
+    border-radius: 40px;
+    border: none;
+  }
+  .header button.fab :focus {
+    outline: none;
+  }
+  .container {
+    min-height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .dashboard {
+    width: 100%;
+  }
+
+  .dashboard .card {
+    background-color: #4C98E3 !important;
+    margin-bottom: 10px;
+  }
+  .buttons button.edit, button.delete {
+    float: right;
+    background-color: #4C98E3 !important;
+    border: none;
+  }
+  .buttons button.edit, button.delete :focus {
+    outline: none;
+  }
+  .buttons button.edit img, button.delete img{
+    height: 20px;
+    width: 20px;
   }
