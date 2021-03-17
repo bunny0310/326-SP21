@@ -62,9 +62,6 @@ body {
     border-radius: 40px;
     border: none;
   }
-  .header button.fab :focus {
-    outline: none;
-  }
   .container {
     min-height: 50vh;
     display: flex;
@@ -85,8 +82,8 @@ body {
     background-color: #4C98E3 !important;
     border: none;
   }
-  .buttons button.edit, button.delete :focus {
-    outline: none;
+  button:focus {
+    outline: none !important;
   }
   .buttons button.edit img, button.delete img{
     height: 20px;
