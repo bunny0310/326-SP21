@@ -125,6 +125,6 @@ button:focus {
   border: none;
 }
 
-#project-name, #project-description {
+#project-name, #project-description, #first-name, #last-name, #email, #password, #confirm-password {
   margin-bottom: 20px;
 }
