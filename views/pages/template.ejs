@@ -6,38 +6,22 @@
   <%- include('../partials/navbar') %>
 
   <div class="header">
-      <button class="fab">add new project</button>
+      <button class="fab" onclick="redirect('/create-project')">add new project</button>
       <h2>project dashboard</h2>
   </div>
-  <div class="container">
-    <div class="dashboard"> 
-        <div class="card bg-primary text-black" id="dashboard">
-          <div class="card-body">
-            Stock Trend Analyzer
-            <span class="buttons">
-                <button class="delete"><img src="./trash.svg"></button>
-                <button class="edit"><img src="./edit.svg"></button>
-            </span>
-          </div>
-        </div>
-        <div class="card bg-primary text-black" id="dashboard">
+  <div class="container"> 
+    <div class="dashboard">
+        <% projects.forEach( (project) => { %>
+          <div class="card bg-primary text-black" id="dashboard">
             <div class="card-body">
-              To Do List App
+              <%= project.title %>
               <span class="buttons">
                   <button class="delete"><img src="./trash.svg"></button>
-                  <button class="edit"><img src="./edit.svg"></button>
+                  <button class="edit" onclick="redirect('/edit-project')"><img src="./edit.svg"></button>
               </span>
             </div>
           </div>
-          <div class="card bg-primary text-black" id="dashboard">
-              <div class="card-body">
-                Restaurant Menu App
-                <span class="buttons">
-                    <button class="delete"><img src="./trash.svg"></button>
-                    <button class="edit"><img src="./edit.svg"></button>
-                </span>
-              </div>
-            </div>
+          <% }); %>
     </div>
   </div>
 

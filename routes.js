@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
-router.get('/dashboard', (req, res) => res.render('pages/template', {title: 'Dashboard'}))
+router.get('/dashboard', (req, res) => res.render('pages/template', {title: 'Dashboard', projects: [{title: 'Stock Trend Analyzer'}, {title: 'To Do List App'}, {title: 'Restaurant Menu App'}]}))
 router.get('/', function(req, res) {
     res.render('pages/index');
 });
