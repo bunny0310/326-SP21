@@ -3,7 +3,7 @@
   --custom-blue: #4C98E3;
 }
 
-body {
+body { 
   margin: 0;
   font-family: 'Avenir Next';
   background-color: var(--custom-gray) !important;
@@ -106,9 +106,7 @@ button:focus {
   display: flex;
 }
 
-#dashboard {
-  background-color: var(--custom-blue) !important;
-}
+
 
 #card-form {
   background-color: var(--custom-gray) !important;
@@ -127,4 +125,11 @@ button:focus {
 
 #project-name, #project-description, #first-name, #last-name, #email, #password, #confirm-password {
   margin-bottom: 20px;
+}
+
+#dashboard {
+  background-color: var(--custom-blue) !important;
+}
+#dashboard:hover, .fab:hover, #card-button:hover {
+  opacity: 0.8;
 }
