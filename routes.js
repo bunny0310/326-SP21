@@ -1,4 +1,5 @@
 const express = require("express");
+const {validateLoginForm} = require("./controller");
 
 const router = express.Router();
 
@@ -18,6 +19,20 @@ router.get('/create-project', function(req, res) {
 router.get('/edit-project', function(req, res) {
     res.render('pages/edit-project', {title: 'Edit Project'});
 });
+
+// endpoint for authentication 
+router.post('/api/validate/:page', (req, res) => {
+    const page = req.params['page'];
+    let returnVal = -1;
+    console.log(page);
+    if(page === 'login') {
+        returnVal = validateLoginForm(req.body);
+    }
+    if(returnVal === -1) {
+        return res.status(400).json({"msg": "Invalid data or malformed request."});
+    }
+    return res.status(200).json({"msg": "Success, form valid!"});
+})
 
 
 module.exports = router; 
