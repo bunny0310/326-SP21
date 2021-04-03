@@ -24,7 +24,6 @@ router.get('/edit-project', function(req, res) {
 router.post('/api/validate/:page', (req, res) => {
     const page = req.params['page'];
     let returnVal = -1;
-    console.log(page);
     if(page === 'login') {
         returnVal = validateLoginForm(req.body);
     }

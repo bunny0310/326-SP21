@@ -133,3 +133,23 @@ button:focus {
 #dashboard:hover, .fab:hover, #card-button:hover {
   opacity: 0.8;
 }
+
+div.toast{
+  position: fixed;
+  left: 50%;
+  top: 200px;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  width: 350px;
+  text-align: center;
+}
+
+div.toast.error {
+  background-color: #cc0000;
+  color: white;
+}
+div.spinner-border {
+  position: fixed;
+  left: 50%;
+  margin: 0 auto;
+}
