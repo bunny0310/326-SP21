@@ -9,23 +9,23 @@
     <div class="header">
         <h2>log in</h2>
     </div>
-
     <div class="container">
         <div class="dashboard">
             <div class="card" id="card-form">
                 <div class="card-body">
-                    <form>
+                    <form method="POST" onsubmit="return validateLogin();" id="login-form">
                         <div class="form-group">
                             <label for="project-name">email address</label>
                             <input type="text" name="email" class="form-control" id="email" placeholder="email address">
 
                             <label for="project-description">password</label>
-                            <input type="text" name="password" class="form-control" id="password"
+                            <input type="password" name="password" class="form-control" id="password"
                                 placeholder="password">
 
-                            <div class="form-group" id="center">
-                                <button type="button" class="btn btn-primary" id="card-button">confirm</button>
+                            <div class="form-group center">
+                                <button type="submit" class="btn btn-primary" id="login-button">confirm</button>
                             </div>
+                            <%- include('../partials/toast') %>
                         </div>
                     </form>
                 </div>

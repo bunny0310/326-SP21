@@ -100,21 +100,13 @@ button:focus {
   width: 20px;
 }
 
-#center {
-  justify-content: center;
-  align-items: center;
-  display: flex;
-}
-
-
-
 #card-form {
   background-color: var(--custom-gray) !important;
   color: var(--custom-blue) !important;
   border: none;
 }
 
-#card-button {
+#login-button, #register-button, #create-project-button, #edit-project-button{
   background-color: var(--custom-blue) !important;
   color: var(--custom-gray) !important;
   height: 40px;
@@ -132,4 +124,30 @@ button:focus {
 }
 #dashboard:hover, .fab:hover, #card-button:hover {
   opacity: 0.8;
+}
+
+.center {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+div.toast{
+  position: fixed;
+  left: 50%;
+  top: 200px;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  width: 350px;
+  text-align: center;
+}
+
+div.toast.error {
+  background-color: #dc3636;
+  color: white;
+}
+div.spinner-border {
+  position: fixed;
+  left: 50%;
+  margin: 0 auto;
 }

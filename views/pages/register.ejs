@@ -14,7 +14,7 @@
         <div class="dashboard">
             <div class="card" id="card-form">
                 <div class="card-body">
-                    <form>
+                    <form method="POST" onsubmit="return validateRegister();" id="register-form">
                         <div class="form-group">
                             <label for="project-name">first name</label>
                             <input type="text" name="first-name" class="form-control" id="first-name"
@@ -27,15 +27,17 @@
                             <input type="text" name="email" class="form-control" id="email" placeholder="email address">
 
                             <label for="project-description">password</label>
-                            <input type="text" name="password" class="form-control" id="password"
+                            <input type="password" name="password" class="form-control" id="password"
                                 placeholder="password">
 
                             <label for="project-description">confirm password</label>
-                            <input type="text" name="confirm-password" class="form-control" id="confirm-password"
+                            <input type="password" name="confirm-password" class="form-control" id="confirm-password"
                                 placeholder="confirm password">
-                            <div class="form-group" id="center">
-                                <button type="button" class="btn btn-primary" id="card-button">confirm</button>
+
+                            <div class="form-group center">
+                                <button type="submit" class="btn btn-primary" id="register-button">confirm</button>
                             </div>
+                            <%- include('../partials/toast') %>
                         </div>
                     </form>
                 </div>
