@@ -3,7 +3,6 @@ const redirect = (url) => {
 };
 
 const loading = "<span class=\"spinner-border spinner-border-sm\"></span>       ";
-
 const validateLogin = () => {
     $("button#login-button").prepend(loading);
     const formData = formatData($("form#login-form"));
@@ -33,9 +32,9 @@ const validateEditProject = () => {
     return false;
 }
 
-const formatData = ($data) => {
+const formatData = (data) => {
     var arr = {};
-    let data = $data.serializeArray();
+    data = data.serializeArray();
     for (var i = 0; i < data.length; i++) {
         arr[data[i]['name']] = data[i]['value'];
     }
@@ -43,7 +42,8 @@ const formatData = ($data) => {
 };
 
 const post = (validationPage, redirectPage, formData) => {
-    const site = 'https://portfolio-manager-326.herokuapp.com/';
+    const getUrl = window.location;
+    const site = getUrl .protocol + "//" + getUrl.host + "/";
     $.post(site + 'api/validate/' + validationPage, formData, (data) => {
         redirect(site + redirectPage);
     }).fail((xhr) => {

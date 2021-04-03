@@ -31,7 +31,7 @@ const validateRegisterForm = (data) => {
     if (!emailRegex.test(email)) {
         return -1;
     }
-    if (confirmPassword !== password || password.legnth < 6) {
+    if (confirmPassword !== password || password.length < 6) {
         return -1;
     }
     return 1;
