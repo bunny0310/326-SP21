@@ -14,7 +14,7 @@
         <div class="dashboard">
             <div class="card" id="card-form">
                 <div class="card-body">
-                    <form>
+                    <form method="POST" onsubmit="return validateCreateProject();" id="create-project-form">
                         <div class="form-group">
                             <label for="project-name">project name</label>
                             <input type="text" name="project-name" class="form-control" id="project-name"
@@ -23,9 +23,11 @@
                             <label for="project-description">project description</label>
                             <textarea rows="5" name="project-description" class="form-control" id="project-description"
                                 placeholder="project description"></textarea>
+
                             <div class="form-group" id="center">
-                                <button type="button" class="btn btn-primary" id="card-button">create project</button>
+                                <button type="submit" class="btn btn-primary" id="create-project-button">create project</button>
                             </div>
+                            <%- include('../partials/toast') %>
                         </div>
                     </form>
                 </div>

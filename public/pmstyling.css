@@ -100,21 +100,13 @@ button:focus {
   width: 20px;
 }
 
-#center {
-  justify-content: center;
-  align-items: center;
-  display: flex;
-}
-
-
-
 #card-form {
   background-color: var(--custom-gray) !important;
   color: var(--custom-blue) !important;
   border: none;
 }
 
-#card-button {
+#login-button, #register-button, #create-project-button, #edit-project-button{
   background-color: var(--custom-blue) !important;
   color: var(--custom-gray) !important;
   height: 40px;
@@ -134,6 +126,12 @@ button:focus {
   opacity: 0.8;
 }
 
+.center {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
 div.toast{
   position: fixed;
   left: 50%;
@@ -145,7 +143,7 @@ div.toast{
 }
 
 div.toast.error {
-  background-color: #cc0000;
+  background-color: #dc3636;
   color: white;
 }
 div.spinner-border {
