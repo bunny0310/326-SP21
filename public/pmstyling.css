@@ -106,7 +106,7 @@ button:focus {
   border: none;
 }
 
-#login-button, #register-button, #create-project-button, #edit-project-button{
+#login-button, #register-button, #project-button {
   background-color: var(--custom-blue) !important;
   color: var(--custom-gray) !important;
   height: 40px;
