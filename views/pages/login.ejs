@@ -16,11 +16,13 @@
                     <form method="POST" onsubmit="return validateLogin();" id="login-form">
                         <div class="form-group">
                             <label for="project-name">email address</label>
-                            <input type="text" name="email" class="form-control" id="email" placeholder="email address">
+                            <input type="text" name="email" class="form-control" id="email" placeholder="email address" onkeyup = "checkEmail()">
+                            <div id = "error3"></div>
 
                             <label for="project-description">password</label>
                             <input type="password" name="password" class="form-control" id="password"
                                 placeholder="password">
+                            <div id = "error4"></div>
 
                             <div class="form-group center">
                                 <button type="submit" class="btn btn-primary" id="login-button">confirm</button>
@@ -33,5 +35,5 @@
         </div>
     </div>
 </body>
-
+<script src = "scripts/frontEndErrorsLogin.js"></script>
 </html>
