@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/dashboard', (req, res) => res.render('pages/template', { title: 'Dashboard', prod_url: process.env.PRODUCTION_URL, projects: [{ title: 'Stock Trend Analyzer' }, { title: 'To Do List App' }, { title: 'Restaurant Menu App' }] }))
 router.get('/', function (req, res) {
-    res.render('pages/index');
+    res.render('pages/index', {title: 'Home Page'});
 });
 router.get('/register', function (req, res) {
     res.render('pages/register', { title: 'Register'});
