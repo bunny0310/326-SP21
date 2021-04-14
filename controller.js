@@ -1,3 +1,5 @@
+const {postgresCon} = require("./config");
+
 const validateLoginForm = (data) => {
     const email = data['email'], password = data['password'];
     const emailRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
@@ -38,13 +40,40 @@ const validateRegisterForm = (data) => {
 };
 
 const validateProjectForm = (data) => {
+    console.log(data);
     const projectName = data['project-name'], projectDescription = data['project-description'];
     //check if any of the fields are empty
-    if (projectName === '' || projectDescription == '' || projectName == undefined || projectDescription === undefined
-        || projectName === null || projectDescription == null) {
+    if (projectName === '' || projectDescription === '' || projectName == undefined || projectDescription === undefined
+        || projectName === null || projectDescription === null) {
         return -1;
     }
     return 1;
 }
 
-module.exports = {validateLoginForm, validateRegisterForm, validateProjectForm};
+const getProjects = async () => {
+    const projects = [];
+    try {
+        let res = await postgresCon().query("SELECT * from projects")
+        for(let row of res.rows) {
+            projects.push(row);
+        }
+        return projects;
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+const insertProject = async (data) => {
+    try {
+        const str = "INSERT INTO projects (\"name\", \"description\", \"userId\") VALUES ('" + data['project-name'] + "', '" + data["project-description"] + "', 1)";
+        let res = await postgresCon().query(str);
+        return 1;
+    }
+    catch (err) {
+        console.log(err);
+        return -1;
+    }
+}
+
+module.exports = {validateLoginForm, validateRegisterForm, validateProjectForm, getProjects, insertProject};

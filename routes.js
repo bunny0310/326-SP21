@@ -1,9 +1,29 @@
 const express = require("express");
-const { validateLoginForm, validateRegisterForm, validateProjectForm} = require("./controller");
+const { validateLoginForm, validateRegisterForm, validateProjectForm, getProjects, insertProject} = require("./controller");
 
 const router = express.Router();
 
-router.get('/dashboard', (req, res) => res.render('pages/template', { title: 'Dashboard', prod_url: process.env.PRODUCTION_URL, projects: [{ title: 'Stock Trend Analyzer' }, { title: 'To Do List App' }, { title: 'Restaurant Menu App' }] }))
+router.get('/dashboard', (req, res) => {
+    getProjects().
+    then((data) => {
+        let arr = [];
+        for(let obj of data) {
+            arr.push({title: obj['name']});
+        }
+        res.render('pages/template', { 
+            title: 'Dashboard', 
+            prod_url: process.env.PRODUCTION_URL, 
+
+            projects: arr})
+        })
+    .catch((err) => {
+        console.log(err);
+        res.render('pages/template', { 
+            title: 'Dashboard', 
+            prod_url: process.env.PRODUCTION_URL, 
+            projects: [{ title: 'Internal Server Error' }]})
+        });  
+    });
 router.get('/', function (req, res) {
     res.render('pages/index', {title: 'Home Page'});
 });
@@ -23,6 +43,7 @@ router.get('/edit-project', function (req, res) {
 // endpoint for authentication 
 router.post('/api/validate/:page', (req, res) => {
     const page = req.params['page'];
+    console.log(page);
     let returnVal = -1;
     if (page === 'login') {
         returnVal = validateLoginForm(req.body);
@@ -38,5 +59,32 @@ router.post('/api/validate/:page', (req, res) => {
     }
     return res.status(200).json({ "msg": "Success, form valid!" });
 })
+
+//api endpoints for performing database operations
+router.get('/api/projects',  (req, res) => {
+    getProjects()
+    .then((data) => {
+        return res.status(200).json(data);
+    })
+    .catch((err) => {
+        return res.status(500).json({"err" : err});
+    })
+})
+
+router.post('/api/projects', (req, res) => {
+    const status = validateProjectForm(req.body);
+    if(status == -1) {
+        return res.status(400).json({msg: "Incorrectly formated data"});
+    }
+    insertProject(req.body)
+    .then((data) => {
+        return res.status(200).json(data);
+    })
+    .catch((err) => {
+        return res.status(500).json({"err" : err});
+    })
+});
+
+
 
 module.exports = router;
