@@ -22,8 +22,15 @@ const validateCreateProject = () => {
     $("button#create-project-button").prepend(loading);
     const formData = formatData($("form#project-form"));
     console.log(formData);
-    post('validate/create-project', 'dashboard', formData);
-    post('projects', 'dashboard', formData);
+    const failureFunction = (xhr) => {
+        const msg = JSON.parse(xhr.responseText).msg;
+        flash(msg, 2250, "error");
+    };
+
+    const successFunction = (data) => {
+        post('projects', 'dashboard', formData, (data) => {redirect(site + 'dashboard')}, failureFunction);
+    };
+    post('validate/create-project', 'dashboard', formData, successFunction, failureFunction);
     return false;
 }
 
@@ -43,15 +50,8 @@ const formatData = (data) => {
     return arr;
 };
 
-const post = (validationPage, redirectPage, formData) => {
-    const getUrl = window.location;
-    const site = getUrl .protocol + "//" + getUrl.host + "/";
-    $.post(site + 'api/' + validationPage, formData, (data) => {
-        redirect(site + redirectPage);
-    }).fail((xhr) => {
-        const msg = JSON.parse(xhr.responseText).msg;
-        flash(msg, 2250, "error");
-    });
+const post = (endpoint, redirectPage, formData, successFunction, failureFunction) => {
+    $.post(site + 'api/' + endpoint, formData, successFunction).fail(failureFunction);
 }
 
 const flash = (msg, delay, type) => {
@@ -68,4 +68,7 @@ const flash = (msg, delay, type) => {
     $("span.spinner-border").remove();
 }
 
+//global variables
+const getUrl = window.location;
+const site = getUrl.protocol + "//" + getUrl.host + "/";
 
