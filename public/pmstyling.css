@@ -14,7 +14,7 @@ body {
   background-color: var(--custom-blue);
 }
 
-.topnav a#right {
+.topnav #right {
   float: right;
   color: var(--custom-gray);
   text-align: center;

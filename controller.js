@@ -1,4 +1,5 @@
-const {postgresCon} = require("./config");
+const { postgresCon } = require("./config");
+const jwt = require('jsonwebtoken');
 
 const validateLoginForm = (data) => {
     const email = data['email'], password = data['password'];
@@ -53,8 +54,8 @@ const validateProjectForm = (data) => {
 const getProjects = async () => {
     const projects = [];
     try {
-        let res = await postgresCon().query("SELECT * from projects")
-        for(let row of res.rows) {
+        let res = await postgresCon().query("SELECT * from projects");
+        for (let row of res.rows) {
             projects.push(row);
         }
         return projects;
@@ -76,4 +77,30 @@ const insertProject = async (data) => {
     }
 }
 
-module.exports = {validateLoginForm, validateRegisterForm, validateProjectForm, getProjects, insertProject};
+const authorize = async (data) => {
+    try {
+        const email = data['email'], password = data['password'];
+        let res = await postgresCon().query("SELECT * from users WHERE email = '" + email + "' AND password = '" + password + "'");
+        console.log(res.rows);
+        if (res.rows.length === 1) {
+            const payload = {
+                userId: res.rows[0].id,
+                email: res.rows[0].email,
+                name: res.rows[0].firstName + ' ' + res.rows[0].lastName
+            }
+
+            let accessToken = jwt.sign(payload, 'secret1234', {
+                algorithm: "HS256",
+                expiresIn: 7200
+            });
+
+            return { msg: accessToken, status: 201 };
+        }
+        return { msg: 'failed', status: 401 };
+    } catch (err) {
+        console.log(err);
+        return { msg: err, status: 500 };
+    }
+}
+
+module.exports = { validateLoginForm, validateRegisterForm, validateProjectForm, getProjects, insertProject, authorize };
