@@ -80,6 +80,10 @@ const flash = (msg, delay, type) => {
     $("span.spinner-border").remove();
 }
 
+const removeToken = () => {
+    window.localStorage.removeItem("PM-326-authToken");
+}
+
 //global variables
 const getUrl = window.location;
 const site = getUrl.protocol + "//" + getUrl.host + "/";

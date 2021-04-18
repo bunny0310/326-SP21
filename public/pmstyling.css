@@ -3,7 +3,7 @@
   --custom-blue: #4C98E3;
 }
 
-body { 
+body {
   margin: 0;
   font-family: 'Avenir Next';
   background-color: var(--custom-gray) !important;
@@ -14,7 +14,7 @@ body {
   background-color: var(--custom-blue);
 }
 
-.topnav #right {
+.topnav .right {
   float: right;
   color: var(--custom-gray);
   text-align: center;
@@ -23,7 +23,7 @@ body {
   font-size: 17px;
 }
 
-.topnav a#left {
+.topnav a.left {
   float: left;
   color: var(--custom-gray);
   text-align: center;
@@ -32,7 +32,7 @@ body {
   font-size: 17px;
 }
 
-.topnav a#right:hover {
+.topnav a.right:hover {
   background-color: #ddd;
   color: black;
 }
@@ -48,8 +48,9 @@ body {
 }
 
 .nav-logo {
-  margin-left: 10px;
-  margin-top: 10px;
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
   float: left;
 }
 
@@ -122,6 +123,7 @@ button:focus {
 #dashboard {
   background-color: var(--custom-blue) !important;
 }
+
 #dashboard:hover, .fab:hover, #card-button:hover {
   opacity: 0.8;
 }
@@ -132,7 +134,7 @@ button:focus {
   display: flex;
 }
 
-div.toast{
+div.toast {
   position: fixed;
   left: 50%;
   top: 200px;
@@ -146,16 +148,19 @@ div.toast.error {
   background-color: #dc3636;
   color: white;
 }
+
 div.spinner-border {
   position: fixed;
   left: 50%;
   margin: 0 auto;
 }
-ul{
+
+ul {
   text-align: center;
-  list-style:inside ;
+  list-style: inside;
 }
-body.homepage{
+
+body.homepage {
   background-image: url('/bg326.svg');
 }
 
@@ -177,4 +182,12 @@ body.homepage{
   font-family: 'Avenir Next' !important;
   color: var(--custom-blue);
   font-size: 100;
+}
+
+.navbar-custom {
+  background-color: var(--custom-blue);
+}
+
+.dropdown-menu {
+  margin-top: 12px !important;
 }

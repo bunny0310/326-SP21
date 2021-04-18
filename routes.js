@@ -44,7 +44,6 @@ router.get('/edit-project', function (req, res) {
 // endpoint for authentication 
 router.post('/api/validate/:page', (req, res) => {
     const page = req.params['page'];
-    console.log(page);
     let returnVal = -1;
     if (page === 'login') {
         returnVal = validateLoginForm(req.body);
@@ -104,7 +103,6 @@ router.post('/api/verifyToken', (req, res) => {
         return res.status(200).json({msg: "Token verified!"});
     }
     catch(err) {
-        console.log(err);
         return res.status(401).json({msg: "Invalid or malformed token"});
     }
 })

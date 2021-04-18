@@ -11,8 +11,8 @@ if (window.localStorage.getItem("PM-326-authToken") === null) {
 }
 
 $.post(
-    site + 'api/verifyToken', 
-    {token: window.localStorage.getItem("PM-326-authToken")}).
+    site + 'api/verifyToken',
+    { token: window.localStorage.getItem("PM-326-authToken") }).
     fail((xhr) => {
         redirect(site + 'login');
     });
@@ -24,6 +24,5 @@ if (loggedInUser === null) {
 }
 
 $(document).ready(() => {
-    $(".topnav a#right").remove();
-    $(".topnav").append("<span id='right'>Welcome " + loggedInUser.name + "</span>");
+    $("a.nav-link.dropdown-toggle").text("Welcome, " + loggedInUser.name);
 });
