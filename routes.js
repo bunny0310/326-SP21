@@ -1,10 +1,10 @@
 const express = require("express");
 const {validateLoginForm, validateRegisterForm, validateProjectForm, getProjects, insertProject, authorize} = require("./controller");
-const {verify, verifyFrontEnd} = require("./middleware");
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
-router.get('/dashboard', verifyFrontEnd, (req, res) => {
+router.get('/dashboard', (req, res) => {
     getProjects().
     then((data) => {
         let arr = [];
@@ -34,10 +34,10 @@ router.get('/register', function (req, res) {
 router.get('/login', function (req, res) {
     res.render('pages/login', { title: 'Login'});
 });
-router.get('/create-project', verifyFrontEnd, function (req, res) {
+router.get('/create-project', function (req, res) {
     res.render('pages/create-project', { title: 'Create Project'});
 });
-router.get('/edit-project', verifyFrontEnd, function (req, res) {
+router.get('/edit-project', function (req, res) {
     res.render('pages/edit-project', { title: 'Edit Project'});
 });
 
@@ -91,11 +91,22 @@ router.post('/api/auth', (req, res) => {
     authorize(formData)
     .then((data) => {
         if(data.status === 201){
-            req.session['authToken'] = data.msg;
             return res.status(data.status).json({msg: data.msg});
         }
         return res.status(data.status).json({msg: "unauthorized"});
     })
+});
+
+router.post('/api/verifyToken', (req, res) => {
+    const token = req.body.token;
+    try {
+        jwt.verify(token, 'secret1234');
+        return res.status(200).json({msg: "Token verified!"});
+    }
+    catch(err) {
+        console.log(err);
+        return res.status(401).json({msg: "Invalid or malformed token"});
+    }
 })
 
 module.exports = router;

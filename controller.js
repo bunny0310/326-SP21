@@ -81,7 +81,6 @@ const authorize = async (data) => {
     try {
         const email = data['email'], password = data['password'];
         let res = await postgresCon().query("SELECT * from users WHERE email = '" + email + "' AND password = '" + password + "'");
-        console.log(res.rows);
         if (res.rows.length === 1) {
             const payload = {
                 userId: res.rows[0].id,
