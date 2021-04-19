@@ -1,6 +1,25 @@
-<div class="topnav">
-    <img src="/cs326icon.svg" class="nav-logo">
-    <a id="right" href="/register">register</a>
-    <a id="right" href="/login">login</a>
-    <a id="left" href="/dashboard">portfolio manager</a>
-</div>
+<nav class="navbar navbar-expand-sm navbar-custom navbar-light">
+    <div class="container-fluid">
+
+        <a class="navbar-brand"><img src="/cs326icon.svg" class="nav-logo"> portfolio manager</a>
+
+        <ul class="navbar-nav">
+            <% if(loggedIn){ %>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="navbardrop" data-toggle="dropdown">
+                        </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                          <a class="dropdown-item" href="" onclick="removeToken()">Logout</a>
+                     </div>
+                </li>
+            <% } else{ %>
+                <li class="nav-item">
+                    <a class="nav-link" href="/login">login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/register">register</a>
+                </li>
+            <% } %>
+        </ul>
+    </div>
+</nav>

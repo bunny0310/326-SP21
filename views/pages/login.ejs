@@ -3,8 +3,10 @@
 
 <%- include('../partials/header') %>
 
+<script src = "scripts/homeGuard.js"></script>
+
 <body>
-    <%- include('../partials/navbar') %>
+    <%- include('../partials/navbar', {loggedIn: false}) %>
 
     <div class="header">
         <h2>log in</h2>

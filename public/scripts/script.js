@@ -25,8 +25,18 @@ const validateLogin = () => {
 const validateRegister = () => {
     $("button#register-button").prepend(loading);
     const formData = formatData($("form#register-form"));
-    console.log(formData);
-    post('validate/register', 'dashboard', formData);
+    const failureFunction = (xhr) => {
+        const msg = JSON.parse(xhr.responseText).msg;
+        flash(msg, 2250, "error");
+    };
+
+    const successFunction = (data) => {
+        post('register', formData, (data) => {
+            flash("Success! Redirecting to the login page....", 2250, "success");
+            setTimeout(() => {redirect(site + 'login')}, 2250);
+        }, failureFunction);
+    };
+    post('validate/register', formData, successFunction, failureFunction);
     return false;
 };
 
@@ -35,12 +45,12 @@ const validateCreateProject = () => {
     const formData = formatData($("form#project-form"));
     console.log(formData);
     const failureFunction = (xhr) => {
-        const msg = JSON.parse(xhr.responseText).msg;
-        flash(msg, 2250, "error");
+        const msg = JSON.parse(xhr.responseText);
+        flash(msg["err"]["name"], 2250, "error");
     };
 
     const successFunction = (data) => {
-        post('projects', formData, (data) => { redirect(site + 'dashboard') }, failureFunction);
+        post('projects', formData, (data) => { redirect(site + 'dashboard') }, failureFunction, window.localStorage.getItem("PM-326-authToken"));
     };
     post('validate/create-project', formData, successFunction, failureFunction);
     return false;
@@ -62,8 +72,18 @@ const formatData = (data) => {
     return arr;
 };
 
-const post = (endpoint, formData, successFunction, failureFunction) => {
-    $.post(site + 'api/' + endpoint, formData, successFunction).fail(failureFunction);
+const post = (endpoint, formData, successFunction, failureFunction, header=null) => {
+    $.ajax({
+        url: site + 'api/' + endpoint, 
+        type: 'post',
+        data: formData,
+        headers: {
+            "authToken": header
+        },
+        dataType: 'json',
+        success: successFunction,
+        failure: failureFunction
+    });
 }
 
 const flash = (msg, delay, type) => {
@@ -78,6 +98,10 @@ const flash = (msg, delay, type) => {
     $(".toast").addClass(type);
 
     $("span.spinner-border").remove();
+}
+
+const removeToken = () => {
+    window.localStorage.removeItem("PM-326-authToken");
 }
 
 //global variables

@@ -2,9 +2,9 @@
 <html>
 
 <%- include('../partials/header') %>
-
+<script src = "scripts/homeGuard.js"></script>
 <body class = 'homepage'>
-  <%- include('../partials/navbar') %>
+  <%- include('../partials/navbar', {loggedIn: false}) %>
   <div class="header1">
     <h1>portfolio manager</h1>
     <h2>Organize your projects</h2>

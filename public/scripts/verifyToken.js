@@ -9,6 +9,14 @@ const parseJwt = (token) => {
 if (window.localStorage.getItem("PM-326-authToken") === null) {
     redirect(site + 'login');
 }
+
+$.post(
+    site + 'api/verifyToken',
+    { token: window.localStorage.getItem("PM-326-authToken") }).
+    fail((xhr) => {
+        redirect(site + 'login');
+    });
+
 const loggedInUser = parseJwt(window.localStorage.getItem("PM-326-authToken"));
 
 if (loggedInUser === null) {
@@ -16,7 +24,5 @@ if (loggedInUser === null) {
 }
 
 $(document).ready(() => {
-    console.log($('.topnav a#right'));
-    $(".topnav a#right").remove();
-    $(".topnav").append("<span id='right'>Welcome " + loggedInUser.name + "</span>");
+    $("a.nav-link.dropdown-toggle").text("Welcome, " + loggedInUser.name);
 });
