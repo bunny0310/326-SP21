@@ -52,10 +52,10 @@ const validateProjectForm = (data) => {
     return 1;
 }
 
-const getProjects = async () => {
+const getProjects = async (userId) => {
     const projects = [];
     try {
-        let res = await postgresCon().query("SELECT * from projects");
+        let res = await postgresCon().query("SELECT * from projects WHERE \"userId\" = " + userId);
         for (let row of res.rows) {
             projects.push(row);
         }
@@ -66,16 +66,19 @@ const getProjects = async () => {
     }
 }
 
-const insertProject = async (data) => {
+const insertProject = async (data, token) => {
+    let returnValue = -1;
     try {
-        const str = "INSERT INTO projects (\"name\", \"description\", \"userId\") VALUES ('" + data['project-name'] + "', '" + data["project-description"] + "', 1)";
+        const userData = jwt.verify(token, 'secret1234');
+        const str = "INSERT INTO projects (\"name\", \"description\", \"userId\") VALUES ('" + data['project-name'] + "', '" + data["project-description"] + "', " + userData.userId + ")";
         let res = await postgresCon().query(str);
-        return 1;
+        returnValue = 1;
     }
     catch (err) {
-        console.log(err);
-        return -1;
+        returnValue = -1;
+        throw err;
     }
+    return returnValue;
 }
 
 const authorize = async (data) => {
