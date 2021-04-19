@@ -149,6 +149,11 @@ div.toast.error {
   color: white;
 }
 
+div.toast.success {
+  background-color: #00b300;
+  color: white;
+}
+
 div.spinner-border {
   position: fixed;
   left: 50%;

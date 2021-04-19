@@ -1,5 +1,5 @@
 const express = require("express");
-const {validateLoginForm, validateRegisterForm, validateProjectForm, getProjects, insertProject, authorize} = require("./controller");
+const {validateLoginForm, validateRegisterForm, validateProjectForm, getProjects, insertProject, authorize, registerUser} = require("./controller");
 const jwt = require('jsonwebtoken');
 
 const router = express.Router();
@@ -85,14 +85,12 @@ router.post('/api/projects', (req, res) => {
     })
 });
 
+// for login
 router.post('/api/auth', (req, res) => {
     const formData = req.body; 
     authorize(formData)
     .then((data) => {
-        if(data.status === 201){
-            return res.status(data.status).json({msg: data.msg});
-        }
-        return res.status(data.status).json({msg: "unauthorized"});
+        return res.status(data.status).json({msg: data.msg});
     })
 });
 
@@ -105,6 +103,15 @@ router.post('/api/verifyToken', (req, res) => {
     catch(err) {
         return res.status(401).json({msg: "Invalid or malformed token"});
     }
+})
+
+// for register
+router.post('/api/register', (req, res) => {
+    const formData = req.body;
+    registerUser(formData)
+    .then((data) => {
+        return res.status(data.status).json({msg: data.msg});
+    })
 })
 
 module.exports = router;

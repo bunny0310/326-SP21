@@ -102,4 +102,29 @@ const authorize = async (data) => {
     }
 }
 
-module.exports = { validateLoginForm, validateRegisterForm, validateProjectForm, getProjects, insertProject, authorize };
+const registerUser = async (data) => {
+    try {
+        const firstName = data['first-name'];
+        const lastName = data['last-name'];
+        const email = data['email'];
+        const password = data['password'];
+
+        await postgresCon().query("INSERT INTO users (\"firstName\",\"lastName\", \"email\", \"password\") VALUES ('" + firstName + "', '" + lastName + "', '" + email + "', '" + password + "')");
+        return {msg: "success", status: 200};
+    } 
+    catch (err) {
+        console.log(err);
+        return {msg: err, status: 500};
+    }
+}
+
+module.exports = 
+{ 
+    validateLoginForm, 
+    validateRegisterForm, 
+    validateProjectForm, 
+    getProjects, 
+    insertProject, 
+    authorize,
+    registerUser
+};

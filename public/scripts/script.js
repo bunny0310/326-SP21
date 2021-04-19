@@ -25,8 +25,18 @@ const validateLogin = () => {
 const validateRegister = () => {
     $("button#register-button").prepend(loading);
     const formData = formatData($("form#register-form"));
-    console.log(formData);
-    post('validate/register', 'dashboard', formData);
+    const failureFunction = (xhr) => {
+        const msg = JSON.parse(xhr.responseText).msg;
+        flash(msg, 2250, "error");
+    };
+
+    const successFunction = (data) => {
+        post('register', formData, (data) => {
+            flash("Success! Redirecting to the login page....", 2250, "success");
+            setTimeout(() => {redirect(site + 'login')}, 2250);
+        }, failureFunction);
+    };
+    post('validate/register', formData, successFunction, failureFunction);
     return false;
 };
 
