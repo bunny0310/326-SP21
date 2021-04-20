@@ -1,6 +1,6 @@
 const { postgresCon } = require("./config");
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const validateLoginForm = (data) => {
     const email = data['email'], password = data['password'];
@@ -128,11 +128,16 @@ const registerUser = async (data) => {
 
         const saltRounds = 10;
 
-        bcrypt.hash(password, saltRounds, async (err, hash) => {
+        bcrypt.genSalt(saltRounds, (err, salt) => {
             if (err) {
                 throw err;
             }
-            await postgresCon().query("INSERT INTO users (\"firstName\",\"lastName\", \"email\", \"password\") VALUES ('" + firstName + "', '" + lastName + "', '" + email + "', '" + hash + "')");
+            bcrypt.hash(password, salt, async (err, hash) => {
+                if (err) {
+                    throw err;
+                }
+                await postgresCon().query("INSERT INTO users (\"firstName\",\"lastName\", \"email\", \"password\") VALUES ('" + firstName + "', '" + lastName + "', '" + email + "', '" + hash + "')");
+            });
         });
 
         return { msg: "success", status: 200 };
