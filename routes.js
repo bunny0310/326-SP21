@@ -1,40 +1,26 @@
 const express = require("express");
-const {io} = require("./app-config");
+const {verify} = require("./middleware");
 
 
-const {validateLoginForm, validateRegisterForm, validateProjectForm, getProjects, insertProject, authorize, registerUser} = require("./controller");
+const {
+    validateLoginForm,
+    validateRegisterForm, 
+    validateProjectForm, 
+    getProjects, 
+    insertProject, 
+    authorize, 
+    registerUser,
+    getProjectCount
+} = require("./controller");
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 
 router.get('/dashboard', (req, res) => {
-    io.on('connection', (socket) => {
-        socket.emit('send-jwt');
-        socket.on('jwt token', (token) => {
-            try {
-                const user = jwt.verify(token, 'secret1234');
-                getProjects(user.userId).
-                then((data) => {
-                    let arr = [];
-                    for(let obj of data) {
-                        arr.push({title: obj['name']});
-                    }
-
-                    socket.emit('token-request-complete', {status: true, msg: arr.length > 0 ? 'Success!' : 'Please add at least one project!', data: arr});
-                    })
-                .catch((err) => {
-                    console.log(err);
-                    socket.emit('token-request-complete', {status: false, msg: 'Internal Server Error'});
-                });  
-            }
-            catch(err) {
-                socket.emit('token-request-complete', {status: false, msg: 'Internal Server Error'});
-            }
-        });
-    });
     res.render('pages/template', { 
         title: 'Dashboard',           
-        status: 'progress'})
+        status: 'progress'
+    })
 }); 
 router.get('/', function (req, res) {
     res.render('pages/index', {title: 'Home Page'});
@@ -73,7 +59,17 @@ router.post('/api/validate/:page', (req, res) => {
 
 //api endpoints for performing database operations
 router.get('/api/projects',  (req, res) => {
-    getProjects()
+    let page = parseInt(req.query.page);
+    if(page === null || page === undefined || !(/^\d+$/.test(page))) {
+        page = 1;
+    }
+    let user = null;
+    try {
+        user = jwt.verify(req.header('authToken'), 'secret1234');
+    } catch (err) {
+        return res.status(401).json({"err": "unauthorized"});
+    }
+    getProjects(user.userId, page)
     .then((data) => {
         return res.status(200).json(data);
     })
@@ -123,6 +119,19 @@ router.post('/api/register', (req, res) => {
     registerUser(formData)
     .then((data) => {
         return res.status(data.status).json({msg: data.msg});
+    })
+})
+
+// for getting projects count
+router.get('/api/getProjectsCount', verify, (req, res) => {
+    getProjectCount(req.user.userId)
+    .then((data) => {
+        console.log(data);
+        return res.status(200).json({"msg": data});
+    })
+    .catch((err) => {
+        console.log(err);
+        return res.status(500).json({"msg": err});
     })
 })
 

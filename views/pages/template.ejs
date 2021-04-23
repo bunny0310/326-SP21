@@ -2,7 +2,6 @@
 <html>
 <%- include('../partials/header') %>
 <script src="scripts/verifyToken.js"></script>
-<script src="scripts/io.js"></script>
 <body>
   <%- include('../partials/navbar', {loggedIn: true}) %>
 
@@ -22,7 +21,27 @@
           </div> -->
           <div class="spinner-border text-primary" id="interim-spinner"></div>
     </div>
+    <div class="footer">
+      <nav>
+        <ul class="pagination justify-content-center">
+          <li class="page-item" id="page-previous">
+            <a class="page-link" href="#" tabindex="-1">Previous</a>
+          </li>
+          <li class="page-item" id="page-dropdown">
+            <select class="browser-default custom-select" onchange="location = this.value;">
+              <option value="" disabled selected>Choose your option</option>
+              <option value="1">Option 1</option>
+              <option value="2">Option 2</option>
+              <option value="3">Option 3</option>
+            </select>
+          </li>
+          <li class="page-item" id="page-next">
+            <a class="page-link" href="#">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
-
 </body>
+<script src="scripts/dashboard-route.js"></script>
 </html>

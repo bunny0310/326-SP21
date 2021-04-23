@@ -1,4 +1,4 @@
-const {app, http, io} = require("./app-config");
+const {app, http} = require("./app-config");
 const express = require("express");
 const path = require('path');
 const session = require('express-session');
@@ -25,5 +25,4 @@ app.use(body_parser.json());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use('/', router);
-//http.listen(app.get('port'));
 http.listen(PORT, () => console.log(`Listening on ${PORT}`));

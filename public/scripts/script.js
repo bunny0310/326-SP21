@@ -86,6 +86,19 @@ const post = (endpoint, formData, successFunction, failureFunction, header=null)
     });
 }
 
+const get = (endpoint, successFunction, failureFunction, header=null) => {
+    $.ajax({
+        url: site + 'api/' + endpoint, 
+        type: 'get',
+        headers: {
+            "authToken": header
+        },
+        dataType: 'json',
+        success: successFunction,
+        failure: failureFunction
+    });
+}
+
 const flash = (msg, delay, type) => {
     $('.toast').on('show.bs.toast', () => {
         $('.toast').css("opacity", "0.7");

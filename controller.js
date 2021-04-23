@@ -1,4 +1,5 @@
 const { postgresCon } = require("./config");
+const { projectsCountCache } = require("./app-config");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -52,10 +53,16 @@ const validateProjectForm = (data) => {
     return 1;
 }
 
-const getProjects = async (userId) => {
+const getProjects = async (userId, page) => {
     const projects = [];
     try {
-        let res = await postgresCon().query("SELECT * from projects WHERE \"userId\" = " + userId);
+        const limit = 5;
+        const offset = (page - 1) * limit;
+
+        let res = await postgresCon().query("SELECT * from projects WHERE \"userId\" = " + userId + " ORDER BY \"updatedAt\"" + " OFFSET " + offset + " LIMIT " + limit);
+        if(res.rows.length === 0) {
+            res = await postgresCon().query("SELECT * from projects WHERE \"userId\" = " + userId + " ORDER BY \"updatedAt\"" + " OFFSET " + 0 + " LIMIT " + limit);
+        }
         for (let row of res.rows) {
             projects.push(row);
         }
@@ -63,7 +70,21 @@ const getProjects = async (userId) => {
     }
     catch (err) {
         console.log(err);
+        throw err;
     }
+}
+
+const getProjectCount = async (userId) => {
+    const count = projectsCountCache.get(userId);
+    // cache miss
+    if(count === null || count === undefined || count === -1) {
+        const countQuery = await postgresCon().query(`SELECT COUNT(*) FROM "projects" WHERE "userId" = ${userId}`); // pull the count from the db
+        projectsCountCache.put(userId, countQuery.rows[0].count); // write to cache 
+        return projectsCountCache.get(userId);
+    }
+    // return the count from the cache
+    console.log("returning the count from the cache");
+    return count;
 }
 
 const insertProject = async (data, token) => {
@@ -72,6 +93,12 @@ const insertProject = async (data, token) => {
         const userData = jwt.verify(token, 'secret1234');
         const str = "INSERT INTO projects (\"name\", \"description\", \"userId\") VALUES ('" + data['project-name'] + "', '" + data["project-description"] + "', " + userData.userId + ")";
         let res = await postgresCon().query(str);
+        // check whether the count for the user exists in the cache 
+        const projectsCount = projectsCountCache.get(userData.userId);
+        if (projectsCount !== -1) {
+            projectsCount++;
+            projectsCountCache.put(userData.userId, projectsCount); // write to the cache
+        }
         returnValue = 1;
     }
     catch (err) {
@@ -156,5 +183,6 @@ module.exports =
     getProjects,
     insertProject,
     authorize,
-    registerUser
+    registerUser,
+    getProjectCount
 };
