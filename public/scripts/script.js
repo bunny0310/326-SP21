@@ -43,9 +43,9 @@ const validateRegister = () => {
 const validateCreateProject = () => {
     $("button#create-project-button").prepend(loading);
     const formData = formatData($("form#project-form"));
-    console.log(formData);
     const failureFunction = (xhr) => {
         const msg = JSON.parse(xhr.responseText);
+        console.log(msg);
         flash(msg["err"]["name"], 2250, "error");
     };
 
@@ -81,9 +81,9 @@ const post = (endpoint, formData, successFunction, failureFunction, header=null)
             "authToken": header
         },
         dataType: 'json',
-        success: successFunction,
-        failure: failureFunction
-    });
+    })
+    .done(successFunction)
+    .fail(failureFunction);
 }
 
 const get = (endpoint, successFunction, failureFunction, header=null) => {

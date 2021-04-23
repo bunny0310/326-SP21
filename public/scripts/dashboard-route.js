@@ -1,32 +1,37 @@
 const getProjects = () => {
     $("div.footer").hide();
-    const returnProjectCard = (name) => {
+    const returnProjectCard = (project) => {
+        let date = new Date(project.createdAt);
         return $(
             "<div class = 'card bg-primary text-black' id = 'dashboard'>"
             + "<div class = 'card-body'>"
-            + name 
+            + project.name 
             + "<span class = 'buttons'>"
             + "<button class=\"delete\"><img src=\"./trash.svg\"></button>"
             + "<button class=\"edit\" onclick=\"redirect('/edit-project')\"><img src=\"./edit.svg\"></button>"
             + "</span>"
             +"</div>"
-             + "</div>"
+            +`<div class="card-footer">
+                Last modified on ${date.toLocaleString()}
+              </div>
+            `
+            + "</div>"
             );
     }
     const successPullProjects = (data) => {
         $("#interim-spinner").remove();
         $("div.dashboard").empty();
         for(let project of data) {
-            $("div.dashboard").append(returnProjectCard(project.name));
+            $("div.dashboard").append(returnProjectCard(project));
         }
         $pageDropdown = $("div.footer ul li#page-dropdown select");
         $pageDropdown.empty();
         let selectedPage = new URLSearchParams(window.location.search).get('page');
-        if(selectedPage === null || selectedPage === undefined || !(/^\d+$/.test(selectedPage)) || parseInt(selectedPage) > pageCount){
+        selectedPage = parseInt(selectedPage);
+        if(selectedPage === null || selectedPage === undefined || !(/^\d+$/.test(selectedPage)) || selectedPage > pageCount){
             selectedPage = 1;
             console.log('here');
         }
-        console.log(parseInt(selectedPage));
         for(let i=1; i<=pageCount; ++i) {
             let selected = "";
             if(i == selectedPage) {
@@ -36,17 +41,21 @@ const getProjects = () => {
         }
         $pageNext = $("div.footer ul li#page-next");
         $pagePrevious = $("div.footer ul li#page-previous");
-        if(selectedPage != 1) {
-            $pagePrevious.removeClass("disabled");
-        } else {
+        if(selectedPage == 1) {
             $pagePrevious.addClass("disabled");
+        } else {
+            $pagePrevious.removeClass("disabled");
+        }
+        if(selectedPage == pageCount) {
+            $pageNext.addClass("disabled");
+        } else {
+            $pageNext.removeClass("disabled");
         }
         // add the appropriate links to previous and next buttons
         $nextLink = $("div.footer ul li#page-next a")[0];
         $previousLink = $("div.footer ul li#page-previous a")[0];
-        const prevPage = parseInt(selectedPage) - 1;
-        const nextPage = parseInt(selectedPage) + 1;
-        console.log(nextPage);
+        const prevPage = selectedPage - 1;
+        const nextPage = selectedPage + 1;
         $nextLink.href=`dashboard?page=${nextPage}`;
         $previousLink.href=`dashboard?page=${prevPage}`;
         $("div.footer").show();
