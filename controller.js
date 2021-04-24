@@ -74,6 +74,16 @@ const getProjects = async (userId, page) => {
     }
 }
 
+const getProject = async(userId, projectId) => {
+    try {
+        let res = await postgresCon().query(`SELECT * FROM projects WHERE "userId" = ${userId} AND "id" = ${projectId}`);
+        return res.rows[0];
+    }
+    catch (err) {
+        throw err;
+    }
+}
+
 const getProjectCount = async (userId) => {
     const count = projectsCountCache.get(userId);
     // cache miss
@@ -184,5 +194,6 @@ module.exports =
     insertProject,
     authorize,
     registerUser,
-    getProjectCount
+    getProjectCount,
+    getProject
 };

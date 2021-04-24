@@ -201,35 +201,18 @@ body.homepage {
   background-color: var(--custom-blue);
 }
 
-.dropdown-menu {
-  margin-top: 12px !important;
-}
-div.footer nav ul {
-  background-color: var(--custom-blue);
-}
-div.footer nav ul li {
-  padding-right: 200px;
-}
-div.footer nav ul li a {
-  background-color: var(--custom-blue);
-  border:none;
-  color: white;
-}
-div.footer nav ul li#page-dropdown {
-  width: 100px !important;
-}
-div.footer nav ul li#page-next {
-}
-div.footer nav ul li#page-dropdown select {
-  width: 200px;
-}
-div.footer nav ul li#page-dropdown select, a {
-  background-color: var(--custom-blue) !important;
-  border: none;
-}
-
-/* .disabled {
+.disabled {
   background-color: var(--custom-blue);
   pointer-events: none;
   opacity: 0.6;
-} */
+}
+
+a.normal-link:link, a.normal-link:visited, a.normal-visited:hover, a.normal-visited:active{
+  font-weight: bold;
+  color: var(--custom-gray);
+  text-decoration: none;
+}
+
+.error-template {padding: 40px 15px;text-align: center; background-color: white; border-radius: 20px}
+.error-actions {margin-top:15px;margin-bottom:15px;}
+.error-actions .btn { margin-right:10px; }

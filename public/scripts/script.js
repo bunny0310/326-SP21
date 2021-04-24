@@ -94,9 +94,9 @@ const get = (endpoint, successFunction, failureFunction, header=null) => {
             "authToken": header
         },
         dataType: 'json',
-        success: successFunction,
-        failure: failureFunction
-    });
+    })
+    .done(successFunction)
+    .fail(failureFunction);;
 }
 
 const flash = (msg, delay, type) => {

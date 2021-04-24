@@ -3,19 +3,18 @@ const getProjects = () => {
     const returnProjectCard = (project) => {
         let date = new Date(project.createdAt);
         return $(
-            "<div class = 'card bg-primary text-black' id = 'dashboard'>"
-            + "<div class = 'card-body'>"
-            + project.name 
-            + "<span class = 'buttons'>"
-            + "<button class=\"delete\"><img src=\"./trash.svg\"></button>"
-            + "<button class=\"edit\" onclick=\"redirect('/edit-project')\"><img src=\"./edit.svg\"></button>"
-            + "</span>"
-            +"</div>"
-            +`<div class="card-footer">
+            `<div class = 'card bg-primary text-black' id = 'dashboard'>
+            <div class = 'card-body'>
+             <a href="/viewProjects/${project.id}" class="normal-link">${project.name}</a>
+            <span class = 'buttons'>
+            <button class="delete"><img src="./trash.svg"></button>
+            <button class="edit" onclick="redirect('/edit-project')"><img src="./edit.svg"></button>
+            </span>
+            </div>
+            <div class="card-footer">
                 Last modified on ${date.toLocaleString()}
               </div>
-            `
-            + "</div>"
+            </div>`
             );
     }
     const successPullProjects = (data) => {
@@ -68,8 +67,12 @@ const getProjects = () => {
     const failureFunction = (xhr) => {
         $("#interim-spinner").remove();
         $("div.dashboard").empty();
-        const msg = JSON.parse(xhr.responseText).msg;
-        console.log(msg);
+        const msg = JSON.parse(xhr.responseText);
+        if(xhr.status == 401) {
+            removeToken();
+            redirect('/login');
+        }
+        flash(JSON.stringify(msg), 2250, "error");
     }
 
     get('getProjectsCount', successPageCount, failureFunction, window.localStorage.getItem('PM-326-authToken'));

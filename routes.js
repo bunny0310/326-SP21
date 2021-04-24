@@ -10,7 +10,8 @@ const {
     insertProject, 
     authorize, 
     registerUser,
-    getProjectCount
+    getProjectCount,
+    getProject
 } = require("./controller");
 const jwt = require('jsonwebtoken');
 const router = express.Router();
@@ -18,10 +19,17 @@ const router = express.Router();
 
 router.get('/dashboard', (req, res) => {
     res.render('pages/template', { 
-        title: 'Dashboard',           
-        status: 'progress'
+        title: 'Dashboard'
     })
 }); 
+router.get('/404', (req, res) => {
+    res.render('partials/notfound');
+});
+router.get('/viewProjects/:id', (req, res) => {
+    res.render('pages/view-project', {
+        title: 'View Project'       
+    })
+})
 router.get('/', function (req, res) {
     res.render('pages/index', {title: 'Home Page'});
 });
@@ -58,23 +66,30 @@ router.post('/api/validate/:page', (req, res) => {
 })
 
 //api endpoints for performing database operations
-router.get('/api/projects',  (req, res) => {
+router.get('/api/projects',  verify, (req, res) => {
     let page = parseInt(req.query.page);
     if(page === null || page === undefined || !(/^\d+$/.test(page))) {
         page = 1;
     }
-    let user = null;
-    try {
-        user = jwt.verify(req.header('authToken'), 'secret1234');
-    } catch (err) {
-        return res.status(401).json({"err": "unauthorized"});
-    }
-    getProjects(user.userId, page)
+    getProjects(req.user.userId, page)
     .then((data) => {
         return res.status(200).json(data);
     })
     .catch((err) => {
         return res.status(500).json({"err" : err});
+    })
+})
+
+router.get("/api/projects/:id", verify, (req, res) => {
+    const id = req.params["id"];
+    getProject(req.user.userId, id)
+    .then((data) => {
+        console.log(data);
+        return res.status(200).json({data: data});
+    })
+    .catch((err) => {
+        console.log(err);
+        return res.status(500).json({msg: err});
     })
 })
 

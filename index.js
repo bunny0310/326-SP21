@@ -20,6 +20,7 @@ const sess = session({
 app.use(sess);
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('scripts', express.static(__dirname + 'public/scripts'));
 app.use(express.urlencoded({ extended: true }));
 app.use(body_parser.json());
 app.set('views', path.join(__dirname, 'views'));
