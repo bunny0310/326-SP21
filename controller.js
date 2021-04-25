@@ -124,7 +124,7 @@ const updateProject = async (data, projectId, userId) => {
             SET "name" = '${data['project-name']}', "description" = '${data['project-description']}', "updatedAt" = CURRENT_TIMESTAMP
             WHERE id = ${projectId} AND "userId" = ${userId}`
             );
-        return res.rows[0];
+        return res.rowCount;
     } catch (err) {
         throw err;
     }

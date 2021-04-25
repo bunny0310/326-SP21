@@ -2,7 +2,7 @@ const redirect = (url) => {
     window.location = url;
 };
 
-const loading = "<span class=\"spinner-border spinner-border-sm\"></span>       ";
+const loading = "<span class=\"spinner-border spinner-border-sm loading\"></span>";
 const validateLogin = () => {
     $("button#login-button").prepend(loading);
     const formData = formatData($("form#login-form"));
@@ -42,17 +42,15 @@ const validateRegister = () => {
 
 const validateCreateProject = () => {
     $("button#create-project-button").prepend(loading);
-    const formData = formatData($("form#project-form"));
+    let formData = formatData($("form#project-form"));
+    const successFunction = (data) => {
+        post('projects', formData, (data) => { redirect(site + 'dashboard') }, failureFunction, window.localStorage.getItem("PM-326-authToken"));
+    };
     const failureFunction = (xhr) => {
         const msg = JSON.parse(xhr.responseText);
         console.log(msg);
         flash(msg["err"]["name"], 2250, "error");
     };
-
-    const successFunction = (data) => {
-        post('projects', formData, (data) => { redirect(site + 'dashboard') }, failureFunction, window.localStorage.getItem("PM-326-authToken"));
-    };
-
     post('validate/project', formData, successFunction, failureFunction);
     return false;
 }
@@ -63,11 +61,22 @@ const validateEditProject = () => {
     const projectId = window.location.pathname.split('/')[2];
 
     const failureFunction = (xhr) => {
-        flash(JSON.stringify(xhr.status), 100000000, "error");
+        if(xhr.status == 401) {
+            removeToken();
+            redirect('/login');
+        }
+        flash(JSON.stringify(xhr), 5000, "error");
+        $(".loading").remove();
     }
 
-    const successFunction = (data) => {
-        put('edit-project/' + projectId, formData, (data) => { redirect(site + 'dashboard') }, failureFunction, window.localStorage.getItem("PM-326-authToken"));
+    const successFunction = (d) => {
+        const nestedSuccessFunction = (data) => {
+            flash("Project successfully updated!", 3000, "success");
+            $("#project-name").val(data.data['project-name']);
+            $("#project-description").val(data.data['project-description']);
+            $(".loading").remove();
+        }
+        put('edit-project/' + projectId, formData, nestedSuccessFunction, failureFunction, window.localStorage.getItem("PM-326-authToken"));
     }
     
     post('validate/project', formData, successFunction, failureFunction, window.localStorage.getItem("PM-326-authToken"));

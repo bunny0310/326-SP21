@@ -29,6 +29,9 @@ router.get('/dashboard', (req, res) => {
 router.get('/404', (req, res) => {
     res.render('partials/notfound');
 });
+router.get('/500', (req, res) => {
+    res.render('partials/internalservererror');
+});
 router.get('/viewProjects/:id', (req, res) => {
     res.render('pages/view-project', {
         title: 'View Project'
@@ -89,7 +92,7 @@ router.get("/api/projects/:id", verify, (req, res) => {
     getProject(req.user.userId, id)
         .then((data) => {
             console.log(data);
-            return res.status(200).json({ data: data });
+            return data === undefined || data === null ? res.status(404).json({msg: "project not found!"}) : res.status(200).json({data: data});
         })
         .catch((err) => {
             console.log(err);
@@ -112,23 +115,15 @@ router.post('/api/projects', (req, res) => {
         })
 });
 
-router.get('/api/edit-project/:id', verify, (req, res) => {
-    const projectId = req.params['id'];
-    try {
-        getProject(req.user.userId, projectId).then((data) => {
-            return res.status(200).json(data);
-        });
-    } catch (err) {
-        return res.status(500).json({ "err": err });
-    }
-});
 
 router.put('/api/edit-project/:id', verify, (req, res) => {
     const projectId = req.params['id'];
 
     updateProject(req.body, projectId, req.user.userId)
-    .then((data) => {
-        return res.status(200).json(data);
+    .then((rowCount) => {
+        if(rowCount == 1)
+            return res.status(200).json({data:req.body});
+        return res.status(404).json({msg: "Project not found!"});
     })
     .catch((err) => {
         return res.status(500).json({ "err": err });

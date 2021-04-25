@@ -15,7 +15,7 @@
         <div class="dashboard">
             <div class="card" id="card-form">
                 <div class="card-body">
-                    <form method="POST" onsubmit="return validateCreateProject();" id="project-form">
+                    <form method="POST" onsubmit="return validateCreateProject();" enctype="multipart/form-data" id="project-form">
                         <div class="form-group">
                             <label for="project-name">project name</label>
                             <input type="text" name="project-name" class="form-control" id="project-name"
@@ -26,6 +26,11 @@
                             <textarea rows="5" name="project-description" class="form-control" id="project-description"
                                 placeholder="project description"></textarea>
                             <div id = "error2"></div>
+
+                            <label class="form-label" for="customFile">Default file input example</label>
+                            <input type="file" class="form-control" id="project-image" name="project-image" accept="image/*"/>
+
+                            <br>
 
                             <div class="form-group" id="center">
                                 <button type="submit" class="btn btn-primary" id="project-button">create project</button>

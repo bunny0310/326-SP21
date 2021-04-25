@@ -24,7 +24,12 @@ const getProject = () => {
             removeToken();
             redirect('/login');
         }
-        flash(JSON.stringify(JSON.parse(xhr.responseText)), 2250, "error");
+        if(xhr.status == 404 || xhr.status == 500) {
+            $.get(`/${xhr.status}`, (data) => {
+                $(".container").empty();
+                $(".container").html(data);
+            })
+        }
     }
     const url = window.location.href;
     let projectId = url.substring(url.lastIndexOf('/') + 1);
