@@ -115,13 +115,16 @@ button:focus {
   border: none;
 }
 
-#login-button, #register-button, #project-button {
+#login-button, #register-button, #edit-project-button, #create-project-button {
   background-color: var(--custom-blue) !important;
   color: var(--custom-gray) !important;
   height: 40px;
   width: 140px;
   border-radius: 40px;
   border: none;
+}
+#edit-project-button {
+  width: 200px;
 }
 
 #project-name, #project-description, #first-name, #last-name, #email, #password, #confirm-password {

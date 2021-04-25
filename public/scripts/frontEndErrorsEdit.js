@@ -44,7 +44,7 @@ function checkall() {
 }
 
 function disableButton() {
-    const register_button = document.getElementById("create-project-button");
+    const register_button = document.getElementById("edit-project-button");
     if(!checkall()) {
         register_button.disabled = true;
     }

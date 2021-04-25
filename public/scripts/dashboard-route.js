@@ -1,14 +1,14 @@
 const getProjects = () => {
     $("div.footer").hide();
     const returnProjectCard = (project) => {
-        let date = new Date(project.createdAt);
+        let date = new Date(project.updatedAt);
         return $(
             `<div class = 'card bg-primary text-black' id = 'dashboard'>
             <div class = 'card-body'>
              <a href="/viewProjects/${project.id}" class="normal-link">${project.name}</a>
             <span class = 'buttons'>
             <button class="delete"><img src="./trash.svg"></button>
-            <button class="edit" onclick="redirect('/edit-project')"><img src="./edit.svg"></button>
+            <button class="edit" onclick="redirect('/edit-project/${project.id}')"><img src="./edit.svg"></button>
             </span>
             </div>
             <div class="card-footer">
@@ -17,6 +17,7 @@ const getProjects = () => {
             </div>`
             );
     }
+
     const successPullProjects = (data) => {
         $("#interim-spinner").remove();
         $("div.dashboard").empty();
@@ -59,11 +60,13 @@ const getProjects = () => {
         $previousLink.href=`dashboard?page=${prevPage}`;
         $("div.footer").show();
     }
+
     let pageCount = 1;
     const successPageCount = (data) => {
         pageCount = data.msg % 5 === 0 ? data.msg / 5 : (parseInt(data.msg / 5)) + 1;
         get('projects?page=' + new URLSearchParams(window.location.search).get('page'), successPullProjects, failureFunction, window.localStorage.getItem('PM-326-authToken'));
     }
+
     const failureFunction = (xhr) => {
         $("#interim-spinner").remove();
         $("div.dashboard").empty();
