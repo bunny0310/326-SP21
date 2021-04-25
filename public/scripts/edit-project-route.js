@@ -6,7 +6,6 @@ if (pathArray.length === 3) {
     }
 
     const failureFunction = (xhr) => {
-        console.log('abc');
             if(xhr.status == 404 || xhr.status == 500) {
                 $.get(`/${xhr.status}`, (data) => {
                     $(".container").empty();

@@ -133,6 +133,19 @@ const put = (endpoint, formData, successFunction, failureFunction, header = null
     .fail(failureFunction);
 }
 
+const deleteReq = (endpoint, successFunction, failureFunction, header = null) => {
+    $.ajax({
+        url: site + 'api/' + endpoint,
+        type: 'delete',
+        headers: {
+            "authToken": header
+        },
+        dataType: 'json',
+    })
+    .done(successFunction)
+    .fail(failureFunction);
+}
+
 const flash = (msg, delay, type) => {
     $('.toast').on('show.bs.toast', () => {
         $('.toast').css("opacity", "0.7");
