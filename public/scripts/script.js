@@ -33,7 +33,7 @@ const validateRegister = () => {
     const successFunction = (data) => {
         post('register', formData, (data) => {
             flash("Success! Redirecting to the login page....", 2250, "success");
-            setTimeout(() => {redirect(site + 'login')}, 2250);
+            setTimeout(() => { redirect(site + 'login') }, 2250);
         }, failureFunction);
     };
     post('validate/register', formData, successFunction, failureFunction);
@@ -52,14 +52,25 @@ const validateCreateProject = () => {
     const successFunction = (data) => {
         post('projects', formData, (data) => { redirect(site + 'dashboard') }, failureFunction, window.localStorage.getItem("PM-326-authToken"));
     };
-    post('validate/create-project', formData, successFunction, failureFunction);
+
+    post('validate/project', formData, successFunction, failureFunction);
     return false;
 }
 
 const validateEditProject = () => {
     $("button#edit-project-button").prepend(loading);
     const formData = formatData($("form#project-form"));
-    post('edit-project', 'dashboard', formData);
+    const projectId = window.location.pathname.split('/')[2];
+
+    const failureFunction = (xhr) => {
+        flash(JSON.stringify(xhr.status), 100000000, "error");
+    }
+
+    const successFunction = (data) => {
+        put('edit-project/' + projectId, formData, (data) => { redirect(site + 'dashboard') }, failureFunction, window.localStorage.getItem("PM-326-authToken"));
+    }
+    
+    post('validate/project', formData, successFunction, failureFunction, window.localStorage.getItem("PM-326-authToken"));
     return false;
 }
 
@@ -72,9 +83,9 @@ const formatData = (data) => {
     return arr;
 };
 
-const post = (endpoint, formData, successFunction, failureFunction, header=null) => {
+const post = (endpoint, formData, successFunction, failureFunction, header = null) => {
     $.ajax({
-        url: site + 'api/' + endpoint, 
+        url: site + 'api/' + endpoint,
         type: 'post',
         data: formData,
         headers: {
@@ -86,9 +97,9 @@ const post = (endpoint, formData, successFunction, failureFunction, header=null)
     .fail(failureFunction);
 }
 
-const get = (endpoint, successFunction, failureFunction, header=null) => {
+const get = (endpoint, successFunction, failureFunction, header = null) => {
     $.ajax({
-        url: site + 'api/' + endpoint, 
+        url: site + 'api/' + endpoint,
         type: 'get',
         headers: {
             "authToken": header
@@ -97,6 +108,20 @@ const get = (endpoint, successFunction, failureFunction, header=null) => {
     })
     .done(successFunction)
     .fail(failureFunction);;
+}
+
+const put = (endpoint, formData, successFunction, failureFunction, header = null) => {
+    $.ajax({
+        url: site + 'api/' + endpoint,
+        type: 'put',
+        data: formData,
+        headers: {
+            "authToken": header
+        },
+        dataType: 'json',
+    })
+    .done(successFunction)
+    .fail(failureFunction);
 }
 
 const flash = (msg, delay, type) => {

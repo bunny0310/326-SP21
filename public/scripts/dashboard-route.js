@@ -17,6 +17,7 @@ const getProjects = () => {
             </div>`
             );
     }
+
     const successPullProjects = (data) => {
         $("#interim-spinner").remove();
         $("div.dashboard").empty();
@@ -59,11 +60,13 @@ const getProjects = () => {
         $previousLink.href=`dashboard?page=${prevPage}`;
         $("div.footer").show();
     }
+
     let pageCount = 1;
     const successPageCount = (data) => {
         pageCount = data.msg % 5 === 0 ? data.msg / 5 : (parseInt(data.msg / 5)) + 1;
         get('projects?page=' + new URLSearchParams(window.location.search).get('page'), successPullProjects, failureFunction, window.localStorage.getItem('PM-326-authToken'));
     }
+
     const failureFunction = (xhr) => {
         $("#interim-spinner").remove();
         $("div.dashboard").empty();

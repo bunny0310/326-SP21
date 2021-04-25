@@ -87,7 +87,7 @@ const getProject = async(userId, projectId) => {
 const getProjectCount = async (userId) => {
     const count = projectsCountCache.get(userId);
     // cache miss
-    if(count === null || count === undefined || count === -1) {
+    if (count === null || count === undefined || count === -1) {
         const countQuery = await postgresCon().query(`SELECT COUNT(*) FROM "projects" WHERE "userId" = ${userId}`); // pull the count from the db
         projectsCountCache.put(userId, countQuery.rows[0].count); // write to cache 
         return projectsCountCache.get(userId);
@@ -110,12 +110,24 @@ const insertProject = async (data, token) => {
             projectsCountCache.put(userData.userId, projectsCount); // write to the cache
         }
         returnValue = 1;
-    }
-    catch (err) {
+    } catch (err) {
         returnValue = -1;
         throw err;
     }
     return returnValue;
+}
+
+const updateProject = async (data, projectId, userId) => {
+    try {
+        let res = await postgresCon().query(
+            `UPDATE projects
+            SET "name" = '${data['project-name']}', "description" = '${data['project-description']}', "updatedAt" = CURRENT_TIMESTAMP
+            WHERE id = ${projectId} AND "userId" = ${userId}`
+            );
+        return res.rows[0];
+    } catch (err) {
+        throw err;
+    }
 }
 
 const authorize = async (data) => {
@@ -192,6 +204,7 @@ module.exports =
     validateProjectForm,
     getProjects,
     insertProject,
+    updateProject,
     authorize,
     registerUser,
     getProjectCount,
