@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html>
+<%- include('../partials/header') %>
+<script src="/scripts/verifyToken.js"></script>
+<body>
+     <%- include('../partials/navbar', {loggedIn: true}) %>
+    <div class="header">
+        <h2>Let's take a look at your accomplishment!</h2>
+    </div>
+
+    <div class="container" id="viewProject">
+            <%- include('../partials/toast') %>
+            <div class="card" id="viewProject" style="width: 100%; display:none">
+                    <div class="card-header">Header</div>
+                    <div class="card-body">Content</div>
+                    <div class="card-footer">Footer</div>
+            </div>
+    </div>
+<script src="/scripts/view-project-route.js"></script>

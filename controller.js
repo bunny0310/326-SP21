@@ -59,9 +59,9 @@ const getProjects = async (userId, page) => {
         const limit = 5;
         const offset = (page - 1) * limit;
 
-        let res = await postgresCon().query("SELECT * from projects WHERE \"userId\" = " + userId + " ORDER BY \"updatedAt\"" + " OFFSET " + offset + " LIMIT " + limit);
+        let res = await postgresCon().query("SELECT * from projects WHERE \"userId\" = " + userId + " ORDER BY \"updatedAt\" DESC" + " OFFSET " + offset + " LIMIT " + limit);
         if(res.rows.length === 0) {
-            res = await postgresCon().query("SELECT * from projects WHERE \"userId\" = " + userId + " ORDER BY \"updatedAt\"" + " OFFSET " + 0 + " LIMIT " + limit);
+            res = await postgresCon().query("SELECT * from projects WHERE \"userId\" = " + userId + " ORDER BY \"updatedAt\" DESC" + " OFFSET " + 0 + " LIMIT " + limit);
         }
         for (let row of res.rows) {
             projects.push(row);
@@ -70,6 +70,16 @@ const getProjects = async (userId, page) => {
     }
     catch (err) {
         console.log(err);
+        throw err;
+    }
+}
+
+const getProject = async(userId, projectId) => {
+    try {
+        let res = await postgresCon().query(`SELECT * FROM projects WHERE "userId" = ${userId} AND "id" = ${projectId}`);
+        return res.rows[0];
+    }
+    catch (err) {
         throw err;
     }
 }
@@ -130,11 +140,11 @@ const authorize = async (data) => {
                     return { msg: accessToken, status: 201 };
                 }
 
-                return { msg: 'failed', status: 401 };
+                return { msg: 'Invalid login credentials!', status: 401 };
             });
         }
 
-        return { msg: 'failed', status: 401 };
+        return { msg: 'Invalid login credentials!', status: 401 };
     } catch (err) {
         return { msg: err, status: 500 };
     }
@@ -184,5 +194,6 @@ module.exports =
     insertProject,
     authorize,
     registerUser,
-    getProjectCount
+    getProjectCount,
+    getProject
 };
