@@ -110,13 +110,14 @@ const insertProject = async (data, token) => {
         const str = "INSERT INTO projects (\"name\", \"description\", \"userId\") VALUES ('" + data['project-name'] + "', '" + data["project-description"] + "', " + userData.userId + ")";
         let res = await postgresCon().query(str);
         // check whether the count for the user exists in the cache 
-        const projectsCount = projectsCountCache.get(userData.userId);
+        let projectsCount = projectsCountCache.get(userData.userId);
         if (projectsCount !== -1) {
             projectsCount++;
             projectsCountCache.put(userData.userId, projectsCount); // write to the cache
         }
         returnValue = 1;
     } catch (err) {
+        console.log(err);
         returnValue = -1;
         throw err;
     }
