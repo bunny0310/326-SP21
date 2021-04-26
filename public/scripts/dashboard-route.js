@@ -71,7 +71,8 @@ const getProjects = () => {
 
 const deleteProject = (projectId) => {
     const successFunction = (data) => {
-        location.reload();
+        flash("Successfully deleted project!", 2250, "success");
+        setTimeout(()=>{location.reload()}, 2250);
     }
     deleteReq('projects/' + projectId, successFunction, failureFunction, window.localStorage.getItem('PM-326-authToken'));
 }

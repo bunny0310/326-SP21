@@ -127,13 +127,16 @@ const insertProject = async (data, token) => {
 //update an existing project in the database with new data
 const updateProject = async (data, projectId, userId) => {
     try {
+        const projectName = data['project-name'], projectDescription = data['project-description'];
         let res = await postgresCon().query(
             `UPDATE projects
-            SET "name" = '${data['project-name']}', "description" = '${data['project-description']}', "updatedAt" = CURRENT_TIMESTAMP
+            SET name = '${projectName}', "description" = '${projectDescription}', "updatedAt" = CURRENT_TIMESTAMP
             WHERE id = ${projectId} AND "userId" = ${userId}`
         );
+        console.log(res.rowCount);
         return res.rowCount;
     } catch (err) {
+        console.log(err);
         throw err;
     }
 }

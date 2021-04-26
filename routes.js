@@ -137,7 +137,7 @@ router.post('/api/projects', (req, res) => {
 
 router.put('/api/edit-project/:id', verify, (req, res) => {
     const projectId = req.params['id'];
-
+    
     updateProject(req.body, projectId, req.user.userId)
         .then((rowCount) => {
             if (rowCount === 1)
