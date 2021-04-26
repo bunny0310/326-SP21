@@ -46,7 +46,6 @@ const validateRegisterForm = (data) => {
 
 //back end validation of create-project and edit-project forms
 const validateProjectForm = (data) => {
-    console.log(data);
     const projectName = data['project-name'], projectDescription = data['project-description'];
     //check if any of the fields are empty
     if (projectName === '' || projectDescription === '' || projectName == undefined || projectDescription === undefined
@@ -98,7 +97,6 @@ const getProjectCount = async (userId) => {
         return projectsCountCache.get(userId);
     }
     // return the count from the cache
-    console.log("returning the count from the cache");
     return count;
 }
 
@@ -106,7 +104,7 @@ const getProjectCount = async (userId) => {
 const insertProject = async (data, token) => {
     let returnValue = -1;
     try {
-        const userData = jwt.verify(token, 'secret1234');
+        const userData = jwt.verify(token, process.env.JWT_SECRET);
         const str = "INSERT INTO projects (\"name\", \"description\", \"userId\") VALUES ('" + data['project-name'] + "', '" + data["project-description"] + "', " + userData.userId + ")";
         let res = await postgresCon().query(str);
         // check whether the count for the user exists in the cache 
@@ -143,13 +141,11 @@ const updateProject = async (data, projectId, userId) => {
 
 //delete a project from the database
 const deleteProject = async (userId, projectId) => {
-    console.log("REEEEE");
     try {
         let res = await postgresCon().query(
             `DELETE FROM projects
             WHERE "userId" = ${userId} AND id = ${projectId}`
         );
-        console.log(res.rowCount);
         return res.rowCount;
     } catch(err){
         throw err;
@@ -171,7 +167,7 @@ const authorize = async (data) => {
                         name: res.rows[0].firstName + ' ' + res.rows[0].lastName
                     }
 
-                    accessToken = jwt.sign(payload, 'secret1234', {
+                    accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
                         algorithm: "HS256",
                         expiresIn: 7200
                     });

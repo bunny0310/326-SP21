@@ -1,11 +1,12 @@
 const {Client, Pool} = require("pg");
 
 // postgres connection configuration
+console.log(process.env);
 const pool = new Pool({
-    user: 'odigrmbnsfpaah',
-    host: 'ec2-54-224-120-186.compute-1.amazonaws.com',
-    database: 'd3k01qf3m3malv',
-    password: '2a79befeeed8d47b88dcc4b33565660bdf5dcdcd6db6812410947666afbdfaa5',
+    user: process.env.POSTGRES_USER,
+    host: process.env.POSTGRES_HOST,
+    database: process.env.POSTGRES_DATABASE,
+    password: process.env.POSTGRES_PASSWORD,
     port: 5432,
     ssl: {
       rejectUnauthorized: false

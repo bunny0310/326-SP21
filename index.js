@@ -4,6 +4,8 @@ const path = require('path');
 const session = require('express-session');
 const PORT = process.env.PORT || 5000;
 
+require('dotenv').config()
+
 const body_parser = require("body-parser");
 
 const router = require('./routes');
@@ -11,7 +13,7 @@ const router = require('./routes');
 app.set('trust proxy', 1);
 
 const sess = session({
-    secret: 'secret1234',
+    secret: process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: 'auto' }

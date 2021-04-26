@@ -30,7 +30,6 @@ const getProjects = () => {
         selectedPage = parseInt(selectedPage);
         if (selectedPage === null || selectedPage === undefined || !(/^\d+$/.test(selectedPage)) || selectedPage > pageCount) {
             selectedPage = 1;
-            console.log('here');
         }
         for (let i = 1; i <= pageCount; ++i) {
             let selected = "";

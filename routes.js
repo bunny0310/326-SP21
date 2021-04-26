@@ -92,7 +92,6 @@ router.get("/api/projects/:id", verify, (req, res) => {
 
     getProject(req.user.userId, id)
         .then((data) => {
-            console.log(data);
             return data === undefined || data === null ? res.status(404).json({ msg: "project not found!" }) : res.status(200).json({ data: data });
         })
         .catch((err) => {
@@ -107,7 +106,6 @@ router.delete("/api/projects/:id", verify, (req, res) => {
 
     deleteProject(req.user.userId, projectId)
         .then((rowCount) => {
-            console.log(rowCount);
             if (rowCount === 1) {
                 return res.status(200).json({ data: req.body });
             }
@@ -137,7 +135,7 @@ router.post('/api/projects', (req, res) => {
 
 router.put('/api/edit-project/:id', verify, (req, res) => {
     const projectId = req.params['id'];
-    
+
     updateProject(req.body, projectId, req.user.userId)
         .then((rowCount) => {
             if (rowCount === 1)
@@ -161,7 +159,7 @@ router.post('/api/auth', (req, res) => {
 router.post('/api/verifyToken', (req, res) => {
     const token = req.body.token;
     try {
-        jwt.verify(token, 'secret1234');
+        jwt.verify(token, process.env.JWT_SECRET);
         return res.status(200).json({ msg: "Token verified!" });
     }
     catch (err) {
@@ -182,7 +180,6 @@ router.post('/api/register', (req, res) => {
 router.get('/api/getProjectsCount', verify, (req, res) => {
     getProjectCount(req.user.userId)
         .then((data) => {
-            console.log(data);
             return res.status(200).json({ "msg": data });
         })
         .catch((err) => {
