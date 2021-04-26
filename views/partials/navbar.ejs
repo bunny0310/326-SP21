@@ -1,8 +1,12 @@
 <nav class="navbar navbar-expand-sm navbar-custom navbar-light">
     <div class="container-fluid">
 
-        <a class="navbar-brand"><img src="/cs326icon.svg" class="nav-logo"> portfolio manager</a>
-
+        <% if(loggedIn){ %>
+            <a class="navbar-brand" href="/dashboard"><img src="/cs326icon.svg" class="nav-logo"> portfolio manager</a>
+        <% } else{ %>
+            <a class="navbar-brand" href="/"><img src="/cs326icon.svg" class="nav-logo"> portfolio manager</a>
+        <% } %>
+            
         <ul class="navbar-nav">
             <% if(loggedIn){ %>
                 <li class="nav-item dropdown">

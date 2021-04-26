@@ -3,6 +3,7 @@ const { projectsCountCache } = require("./app-config");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
+//back end validation of login form
 const validateLoginForm = (data) => {
     const email = data['email'], password = data['password'];
     const emailRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
@@ -21,6 +22,7 @@ const validateLoginForm = (data) => {
     return 1;
 };
 
+//back end validation of register form
 const validateRegisterForm = (data) => {
     const firstName = data['first-name'], lastName = data['last-name'], email = data['email'],
         password = data['password'], confirmPassword = data['confirm-password'];
@@ -42,8 +44,8 @@ const validateRegisterForm = (data) => {
     return 1;
 };
 
+//back end validation of create-project and edit-project forms
 const validateProjectForm = (data) => {
-    console.log(data);
     const projectName = data['project-name'], projectDescription = data['project-description'];
     //check if any of the fields are empty
     if (projectName === '' || projectDescription === '' || projectName == undefined || projectDescription === undefined
@@ -53,6 +55,7 @@ const validateProjectForm = (data) => {
     return 1;
 }
 
+//returns all projects belonging to a speciic user in the database
 const getProjects = async (userId, page) => {
     const projects = [];
     try {
@@ -60,7 +63,7 @@ const getProjects = async (userId, page) => {
         const offset = (page - 1) * limit;
 
         let res = await postgresCon().query("SELECT * from projects WHERE \"userId\" = " + userId + " ORDER BY \"updatedAt\" DESC" + " OFFSET " + offset + " LIMIT " + limit);
-        if(res.rows.length === 0) {
+        if (res.rows.length === 0) {
             res = await postgresCon().query("SELECT * from projects WHERE \"userId\" = " + userId + " ORDER BY \"updatedAt\" DESC" + " OFFSET " + 0 + " LIMIT " + limit);
         }
         for (let row of res.rows) {
@@ -74,7 +77,8 @@ const getProjects = async (userId, page) => {
     }
 }
 
-const getProject = async(userId, projectId) => {
+//returns a specific project from the database belonging to a user
+const getProject = async (userId, projectId) => {
     try {
         let res = await postgresCon().query(`SELECT * FROM projects WHERE "userId" = ${userId} AND "id" = ${projectId}`);
         return res.rows[0];
@@ -93,43 +97,62 @@ const getProjectCount = async (userId) => {
         return projectsCountCache.get(userId);
     }
     // return the count from the cache
-    console.log("returning the count from the cache");
     return count;
 }
 
+//insert a project into the database
 const insertProject = async (data, token) => {
     let returnValue = -1;
     try {
-        const userData = jwt.verify(token, 'secret1234');
+        const userData = jwt.verify(token, process.env.JWT_SECRET);
         const str = "INSERT INTO projects (\"name\", \"description\", \"userId\") VALUES ('" + data['project-name'] + "', '" + data["project-description"] + "', " + userData.userId + ")";
         let res = await postgresCon().query(str);
         // check whether the count for the user exists in the cache 
-        const projectsCount = projectsCountCache.get(userData.userId);
+        let projectsCount = projectsCountCache.get(userData.userId);
         if (projectsCount !== -1) {
             projectsCount++;
             projectsCountCache.put(userData.userId, projectsCount); // write to the cache
         }
         returnValue = 1;
     } catch (err) {
+        console.log(err);
         returnValue = -1;
         throw err;
     }
     return returnValue;
 }
 
+//update an existing project in the database with new data
 const updateProject = async (data, projectId, userId) => {
     try {
+        const projectName = data['project-name'], projectDescription = data['project-description'];
         let res = await postgresCon().query(
             `UPDATE projects
-            SET "name" = '${data['project-name']}', "description" = '${data['project-description']}', "updatedAt" = CURRENT_TIMESTAMP
+            SET name = '${projectName}', "description" = '${projectDescription}', "updatedAt" = CURRENT_TIMESTAMP
             WHERE id = ${projectId} AND "userId" = ${userId}`
-            );
+        );
+        console.log(res.rowCount);
         return res.rowCount;
     } catch (err) {
+        console.log(err);
         throw err;
     }
 }
 
+//delete a project from the database
+const deleteProject = async (userId, projectId) => {
+    try {
+        let res = await postgresCon().query(
+            `DELETE FROM projects
+            WHERE "userId" = ${userId} AND id = ${projectId}`
+        );
+        return res.rowCount;
+    } catch(err){
+        throw err;
+    }
+}
+
+//verifies a user trying to log in and sends them an access token upon successful verification
 const authorize = async (data) => {
     try {
         const email = data['email'], password = data['password'];
@@ -144,7 +167,7 @@ const authorize = async (data) => {
                         name: res.rows[0].firstName + ' ' + res.rows[0].lastName
                     }
 
-                    accessToken = jwt.sign(payload, 'secret1234', {
+                    accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
                         algorithm: "HS256",
                         expiresIn: 7200
                     });
@@ -162,6 +185,7 @@ const authorize = async (data) => {
     }
 }
 
+//adds a new user to the database
 const registerUser = async (data) => {
     try {
         const firstName = data['first-name'];
@@ -203,10 +227,11 @@ module.exports =
     validateRegisterForm,
     validateProjectForm,
     getProjects,
+    getProject,
     insertProject,
     updateProject,
+    deleteProject,
     authorize,
     registerUser,
-    getProjectCount,
-    getProject
+    getProjectCount
 };

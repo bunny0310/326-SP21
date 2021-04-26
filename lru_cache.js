@@ -16,7 +16,6 @@ class LRUCache {
         if(ret !== null) {
             this.removeNode(ret);
             this.addNode(ret);
-            console.log('cache!!');
             return ret.val;
         }
         

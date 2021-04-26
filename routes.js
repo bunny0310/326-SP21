@@ -7,9 +7,9 @@ const {
     validateRegisterForm,
     validateProjectForm,
     getProjects,
-    findProject,
     insertProject,
     updateProject,
+    deleteProject,
     authorize,
     registerUser,
     getProjectCount,
@@ -17,7 +17,7 @@ const {
 } = require("./controller");
 
 const jwt = require('jsonwebtoken');
-const { restart } = require("nodemon");
+const { restart, reset } = require("nodemon");
 const router = express.Router();
 
 
@@ -67,10 +67,10 @@ router.post('/api/validate/:page', (req, res) => {
         returnVal = validateProjectForm(req.body);
     }
     if (returnVal === -1) {
-        return res.status(400).json({ "msg": "Invalid data or malformed request." });
+        return res.status(400).json({ msg: "Invalid data or malformed request." });
     }
-    return res.status(200).json({ "msg": "Success, form valid!" });
-})
+    return res.status(200).json({ msg: "Success, form valid!" });
+});
 
 //api endpoints for performing database operations
 router.get('/api/projects', verify, (req, res) => {
@@ -85,24 +85,41 @@ router.get('/api/projects', verify, (req, res) => {
         .catch((err) => {
             return res.status(500).json({ "err": err });
         })
-})
+});
 
 router.get("/api/projects/:id", verify, (req, res) => {
     const id = req.params["id"];
+
     getProject(req.user.userId, id)
         .then((data) => {
-            console.log(data);
-            return data === undefined || data === null ? res.status(404).json({msg: "project not found!"}) : res.status(200).json({data: data});
+            return data === undefined || data === null ? res.status(404).json({ msg: "project not found!" }) : res.status(200).json({ data: data });
         })
         .catch((err) => {
             console.log(err);
             return res.status(500).json({ msg: err });
         })
-})
+});
+
+//removing project from database
+router.delete("/api/projects/:id", verify, (req, res) => {
+    const projectId = req.params["id"];
+
+    deleteProject(req.user.userId, projectId)
+        .then((rowCount) => {
+            if (rowCount === 1) {
+                return res.status(200).json({ data: req.body });
+            }
+            return res.status(404).json({ msg: "Project not found!" });
+        })
+        .catch((err) => {
+            console.log(err);
+            return res.status(500).json({ msg: err });
+        });
+});
 
 router.post('/api/projects', (req, res) => {
     const status = validateProjectForm(req.body);
-    if (status == -1) {
+    if (status === -1) {
         return res.status(400).json({ err: "Incorrectly formated data" });
     }
     token = req.header('authToken');
@@ -120,14 +137,14 @@ router.put('/api/edit-project/:id', verify, (req, res) => {
     const projectId = req.params['id'];
 
     updateProject(req.body, projectId, req.user.userId)
-    .then((rowCount) => {
-        if(rowCount == 1)
-            return res.status(200).json({data:req.body});
-        return res.status(404).json({msg: "Project not found!"});
-    })
-    .catch((err) => {
-        return res.status(500).json({ "err": err });
-    });
+        .then((rowCount) => {
+            if (rowCount === 1)
+                return res.status(200).json({ data: req.body });
+            return res.status(404).json({ msg: "Project not found!" });
+        })
+        .catch((err) => {
+            return res.status(500).json({ "err": err });
+        });
 });
 
 // for login
@@ -142,13 +159,13 @@ router.post('/api/auth', (req, res) => {
 router.post('/api/verifyToken', (req, res) => {
     const token = req.body.token;
     try {
-        jwt.verify(token, 'secret1234');
+        jwt.verify(token, process.env.JWT_SECRET);
         return res.status(200).json({ msg: "Token verified!" });
     }
     catch (err) {
         return res.status(401).json({ msg: "Invalid or malformed token" });
     }
-})
+});
 
 // for register
 router.post('/api/register', (req, res) => {
@@ -157,19 +174,18 @@ router.post('/api/register', (req, res) => {
         .then((data) => {
             return res.status(data.status).json({ msg: data.msg });
         })
-})
+});
 
 // for getting projects count
 router.get('/api/getProjectsCount', verify, (req, res) => {
     getProjectCount(req.user.userId)
         .then((data) => {
-            console.log(data);
             return res.status(200).json({ "msg": data });
         })
         .catch((err) => {
             console.log(err);
             return res.status(500).json({ "msg": err });
         })
-})
+});
 
 module.exports = router;
