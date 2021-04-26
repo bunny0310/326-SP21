@@ -1,5 +1,6 @@
 const express = require("express");
 const { verify } = require("./middleware");
+const {projectsCountCache} = require("./app-config");
 
 
 const {
@@ -107,6 +108,8 @@ router.delete("/api/projects/:id", verify, (req, res) => {
     deleteProject(req.user.userId, projectId)
         .then((rowCount) => {
             if (rowCount === 1) {
+                const projectsCount = projectsCountCache.get(req.user.userId);
+                projectsCountCache.put(req.user.userId, projectsCount - 1);
                 return res.status(200).json({ data: req.body });
             }
             return res.status(404).json({ msg: "Project not found!" });
